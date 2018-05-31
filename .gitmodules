@@ -1,3 +1,6 @@
 [submodule "GridPrototype/Assets/_External/NTBUtils"]
 	path = GridPrototype/Assets/_External/NTBUtils
 	url = https://github.com/Nolanlemahn/NTBUtils.git
+[submodule "GamePackage/Assets/_External/NTBUtils"]
+	path = GamePackage/Assets/_External/NTBUtils
+	url = https://github.com/Nolanlemahn/NTBUtils.git
