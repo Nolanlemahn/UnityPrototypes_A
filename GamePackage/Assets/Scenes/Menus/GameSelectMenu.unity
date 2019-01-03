@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 220135442}
   - component: {fileID: 220135446}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: MenuCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,59 +271,11 @@ MonoBehaviour:
   ButtonPrefab: {fileID: 1597818192243014, guid: b41b0c5447ed00a46aaa3ae8a99f9d9c,
     type: 2}
   RowPrefab: {fileID: 1132981845686700, guid: 341fef28cd8f05349961a6d899577a7b, type: 2}
+  MenuCanvas: {fileID: 220135441}
   Scrollbar: {fileID: 809047603}
   Content: {fileID: 1336352452}
   Games:
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
-  - GameName: Endless Runner
-    ButtonImage: {fileID: 0}
+  - Endless Runner
 --- !u!4 &490250481
 Transform:
   m_ObjectHideFlags: 0
@@ -522,7 +474,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -960.00006, y: 0}
+  m_AnchoredPosition: {x: -960, y: 0}
   m_SizeDelta: {x: -1920, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1336352454

@@ -1,39 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameSelectMenu : MonoBehaviour
 {
-    [Serializable]
-    public class GameRegistration
-    {
-        public string GameName = "null";
-        public Sprite ButtonImage = null;
-    }
-
     public int ButtonsPerRow = 4;
     [Header("Prefabs")]
     public GameObject ButtonPrefab;
     public GameObject RowPrefab;
     [Header("Runtime Objects")]
+    public GameObject MenuCanvas;
     public Scrollbar Scrollbar;
     public GameObject Content;
     [Header("Data")]
-    public List<GameRegistration> Games;
+    public List<string> Games;
 
     private void Start()
     {
-        this.PopulateMenu();
+        this.populateMenu();
             //Move menu to top
         this.Scrollbar.value = 1f;
     }
 
-    private void PopulateMenu()
+    private void loadFromRegistrar(string name)
+    {
+        GameMenuAssetList gmal = GameMenuAssetList.Get();
+        gmal.Init();
+        GameRegistration reg = gmal.Registrar(name);
+        this.MenuCanvas.SetActive(false);
+        SceneManager.LoadScene(reg.Scene, LoadSceneMode.Additive);
+    }
+
+    private void populateMenu()
     {
         var columnTicker = 0;
 
-        var anchor = this.Content.transform.position;
         var row = Instantiate(this.RowPrefab);
         row.transform.SetParent(this.Content.transform, false);
 
@@ -44,6 +47,7 @@ public class GameSelectMenu : MonoBehaviour
             columnTicker++;
 
             var butt = obj.GetComponent<Button>();
+            butt.onClick.AddListener(delegate { this.loadFromRegistrar(game); });
 
             if (columnTicker == this.ButtonsPerRow)
             {
