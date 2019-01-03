@@ -1,16 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class EndlessRunnerStoryteller : MonoBehaviour {
+[System.Serializable]
+public struct PlatformDistribution
+{
+    public float Weight;
+    public EndlessRunnerPlatform PlatformPrefab;
+}
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+public class EndlessRunnerStoryteller : MonoBehaviour
+{
+    public List<PlatformDistribution> Platforms;
+    /*
+    [CurveAttribute(-5f, 5f, -5f, 5f,
+        0f, 1f, 0f, 1f)]
+    public AnimationCurve AC;
+    */
 }

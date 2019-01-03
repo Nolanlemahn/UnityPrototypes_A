@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class EndlessRunnerPlatform : MonoBehaviour
 {
+    public float RealWidth = 1f;
     public float OutOfBoundsLifetime = 5f;
     public Collider Collider;
 

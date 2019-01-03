@@ -1,38 +1,53 @@
 ﻿using NTBUtils;
 using UnityEngine;
+using UnityEngine.Experimental.Input;
 
 public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
 {
     public Rigidbody RB;
     public Camera Camera;
-    [Header("Body Parts")] public GameObject LFoot;
+    public InputAction JumpAction;
+    [Header("Body Parts")]
+    public GameObject LFoot;
     public GameObject RFoot;
 
     private EndlessRunnerPlayerFeet _lFootScript;
     private EndlessRunnerPlayerFeet _rFootScript;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         this.RB.velocity = new Vector3(5, 0, 0);
 
         this._lFootScript = this.LFoot.AddComponent<EndlessRunnerPlayerFeet>();
         this._rFootScript = this.RFoot.AddComponent<EndlessRunnerPlayerFeet>();
+
+        this.JumpAction.performed += _ => this.tryJump();
+    }
+
+    private void OnEnable()
+    {
+        this.JumpAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        this.JumpAction.Enable();
+    }
+
+    private void tryJump()
+    {
+        if (this._lFootScript.CheckGrounded() || this._rFootScript.CheckGrounded())
+        {
+            Vector3 vel = this.RB.velocity;
+            vel.y = 7f;
+            this.RB.velocity = vel;
+        }
     }
 
     private void Update()
     {
         SDbgPanel.Log("Player Velocity", this.RB.velocity);
-
-        Vector3 vel = this.RB.velocity;
-
-        if (this._lFootScript.CheckGrounded() || this._rFootScript.CheckGrounded())
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                vel.y = 7f;
-                this.RB.velocity = vel;
-            }
-        }
     }
 
     public class EndlessRunnerPlayerFeet : MonoBehaviour
