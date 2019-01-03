@@ -42,9 +42,13 @@ public class GameSelectMenu : MonoBehaviour
 
         foreach (var game in this.Games)
         {
+            columnTicker++;
+
             var obj = Instantiate(this.ButtonPrefab);
             obj.transform.SetParent(row.transform, false);
-            columnTicker++;
+
+            Text text = obj.GetComponentInChildren<Text>();
+            text.text = game;
 
             var butt = obj.GetComponent<Button>();
             butt.onClick.AddListener(delegate { this.loadFromRegistrar(game); });
