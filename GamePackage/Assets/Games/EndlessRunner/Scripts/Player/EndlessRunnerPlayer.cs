@@ -7,6 +7,9 @@ using UnityEngine.Experimental.Input;
 public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
 {
     #region Properties
+
+    [Header("Gameplay")]
+    public float Speed = 5f;
     [Header("Components/Children/Etc")]
     public Rigidbody RB;
     public Camera Camera;
@@ -30,7 +33,7 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     protected override void Awake()
     {
         base.Awake();
-        this.RB.velocity = new Vector3(0, 0, 5);
+        this.RB.velocity = new Vector3(0, 0, this.Speed);
 
         this._lFootScript = this.LFoot.AddComponent<EndlessRunnerPlayerFeet>();
         this._rFootScript = this.RFoot.AddComponent<EndlessRunnerPlayerFeet>();

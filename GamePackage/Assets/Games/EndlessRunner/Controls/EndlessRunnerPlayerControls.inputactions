@@ -14,7 +14,7 @@
                 {
                     "name": "Movement",
                     "id": "6bbc3482-d2b5-444f-8893-9c7e586c105a",
-                    "expectedControlLayout": "",
+                    "expectedControlLayout": "Axis",
                     "bindings": []
                 }
             ],
