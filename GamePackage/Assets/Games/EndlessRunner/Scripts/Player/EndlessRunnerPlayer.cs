@@ -1,6 +1,10 @@
-﻿using NTBUtils;
+﻿using System.Collections.Generic;
+using NTBUtils;
 using UnityEngine;
 using UnityEngine.Experimental.Input;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 // Demonstrates nested MonoBehavior, new InputSystem
 
@@ -15,13 +19,14 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     public Camera Camera;
     public InputActionAsset MovementAsset;
     [Header("Body Parts")]
-    public GameObject LFoot;
-    public GameObject RFoot;
+    public GameObject FrontLFoot;
+    public GameObject FrontRFoot;
+    public GameObject BackLFoot;
+    public GameObject BackRFoot;
     [Header("Runtime variables")]
     public float DistanceTravelled = 0f;
 
-    private EndlessRunnerPlayerFeet _lFootScript;
-    private EndlessRunnerPlayerFeet _rFootScript;
+    private List<EndlessRunnerPlayerFeet> _feetScripts;
     private Vector3 _initialPosition;
 
     private InputAction _jumpAction;
@@ -35,8 +40,13 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
         base.Awake();
         this.RB.velocity = new Vector3(0, 0, this.Speed);
 
-        this._lFootScript = this.LFoot.AddComponent<EndlessRunnerPlayerFeet>();
-        this._rFootScript = this.RFoot.AddComponent<EndlessRunnerPlayerFeet>();
+        this._feetScripts = new List<EndlessRunnerPlayerFeet>
+        {
+            this.FrontLFoot.AddComponent<EndlessRunnerPlayerFeet>(),
+            this.FrontRFoot.AddComponent<EndlessRunnerPlayerFeet>(),
+            this.BackLFoot.AddComponent<EndlessRunnerPlayerFeet>(),
+            this.BackRFoot.AddComponent<EndlessRunnerPlayerFeet>()
+        };
         this._initialPosition = this.transform.position;
 
         this._jumpAction = this.MovementAsset.actionMaps[0].actions[0];
@@ -78,11 +88,15 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
 
     private void tryJump()
     {
-        if (this._lFootScript.CheckGrounded() || this._rFootScript.CheckGrounded())
+        foreach (EndlessRunnerPlayerFeet foot in _feetScripts)
         {
-            Vector3 vel = this.RB.velocity;
-            vel.y = 7f;
-            this.RB.velocity = vel;
+            if (foot.CheckGrounded())
+            {
+                Vector3 vel = this.RB.velocity;
+                vel.y = 7f;
+                this.RB.velocity = vel;
+                return;
+            }
         }
     }
 
@@ -98,3 +112,20 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     }
     #endregion
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(EndlessRunnerPlayer))]
+public class EndlessRunnerPlayerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if (GUILayout.Button("Clean Target"))
+        {
+            EndlessRunnerPlayer t = (EndlessRunnerPlayer) target;
+            Undo.RecordObject(t, "Cleanup EndlessRunnerPlayer");
+            t.Speed = 5f;
+        }
+    }
+}
+#endif

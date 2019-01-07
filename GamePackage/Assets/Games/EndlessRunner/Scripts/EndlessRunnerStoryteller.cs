@@ -21,17 +21,19 @@ public class EndlessRunnerStoryteller : MonoBehaviour
         0f, 1f, 0f, 1f)]
     public AnimationCurve AC;
     */
+    private float _totalWeight = 0f;
 
     void Start()
     {
         this.StartCoroutine(this.spawnPlatformCoroutine());
+        Platforms.ForEach(plat => _totalWeight += plat.Weight);
     }
 
     private IEnumerator spawnPlatformCoroutine()
     {
         while (true)
         {
-            EndlessRunnerPlatform selectedPlatform = this.Platforms[0].PlatformPrefab;
+            EndlessRunnerPlatform selectedPlatform = this.randomPlatform();
 
             yield return new WaitForSeconds(this.NormalTimer +
                 this.CurrentPlatformWidth / EndlessRunnerPlayer.Instance.Speed);
@@ -40,6 +42,20 @@ public class EndlessRunnerStoryteller : MonoBehaviour
 
             this.spawnPlatform(selectedPlatform);
         }
+    }
+
+    private EndlessRunnerPlatform randomPlatform()
+    {
+        float roll = Random.Range(0f, _totalWeight);
+        float summedWeight = 0f;
+        foreach (PlatformDistribution platform in Platforms)
+        {
+            float newSummedWeight = summedWeight + platform.Weight;
+            if (summedWeight <= roll && roll <= newSummedWeight)
+                return platform.PlatformPrefab;
+            summedWeight = newSummedWeight;
+        }
+        return null;
     }
 
     private void spawnPlatform(EndlessRunnerPlatform platform)

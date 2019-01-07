@@ -9,7 +9,7 @@ public class EndlessRunnerPlatform : MonoBehaviour
     public Collider Collider;
 
     private IEnumerator _deathCoroutine = null;
-	void Start ()
+	protected virtual void Start ()
 	{
 	    if (!this.Collider) this.Collider = this.GetComponent<Collider>();
 	}
