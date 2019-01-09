@@ -13,7 +13,10 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     #region Properties
 
     [Header("Gameplay")]
-    public float Speed = 5f;
+    public float ForwardSpeed = 5f;
+    public float SidewaysSpeed = 1f;
+    public float Y_KillLine = -0.5f;
+    public float KillVelocity = 0.05f;
     [Header("Components/Children/Etc")]
     public Rigidbody RB;
     public Camera Camera;
@@ -38,7 +41,6 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     protected override void Awake()
     {
         base.Awake();
-        this.RB.velocity = new Vector3(0, 0, this.Speed);
 
         this._feetScripts = new List<EndlessRunnerPlayerFeet>
         {
@@ -57,26 +59,39 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
 
     private void OnEnable()
     {
+        this.RB.useGravity = true;
+        this.RB.velocity = new Vector3(0, 0, this.ForwardSpeed);
         this._jumpAction.Enable();
         this._moveAction.Enable();
     }
 
     private void OnDisable()
     {
+        this.RB.useGravity = false;
+        this.RB.velocity = Vector3.zero;
         this._jumpAction.Disable();
         this._moveAction.Disable();
     }
 
     private void Update()
     {
+        // data polling
         Vector3 pos = this.transform.position;
-        pos.x += this._movement * Time.deltaTime;
-        this.transform.position = pos;
-
-        this.DistanceTravelled = this.transform.position.z - this._initialPosition.z;
-
         SDbgPanel.Log("Player Velocity", this.RB.velocity);
         SDbgPanel.Log("Player Distance", this.DistanceTravelled);
+
+        // death tracking
+        if (pos.y < this.Y_KillLine || this.RB.velocity.magnitude < this.KillVelocity)
+        {
+            EndlessRunnerGameManager.Instance.EndGame();
+        }
+
+        // horizontal movement
+        pos.x += this._movement * Time.deltaTime * this.SidewaysSpeed;
+        this.transform.position = pos;
+
+        // data tracking
+        this.DistanceTravelled = this.transform.position.z - this._initialPosition.z;
     }
     #endregion
 
@@ -124,7 +139,7 @@ public class EndlessRunnerPlayerEditor : Editor
         {
             EndlessRunnerPlayer t = (EndlessRunnerPlayer) target;
             Undo.RecordObject(t, "Cleanup EndlessRunnerPlayer");
-            t.Speed = 5f;
+            t.ForwardSpeed = 5f;
         }
     }
 }

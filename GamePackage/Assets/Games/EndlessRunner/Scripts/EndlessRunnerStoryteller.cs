@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using NTBUtils;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,7 +10,7 @@ public struct PlatformDistribution
     public EndlessRunnerPlatform PlatformPrefab;
 }
 
-public class EndlessRunnerStoryteller : MonoBehaviour
+public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStoryteller>
 {
     [Header("Runtime Parameters")]
     [Tooltip("Cheat on first platform")] public float CurrentPlatformWidth;
@@ -22,11 +23,19 @@ public class EndlessRunnerStoryteller : MonoBehaviour
     public AnimationCurve AC;
     */
     private float _totalWeight = 0f;
+    private IEnumerator _storyCoroutine = null;
 
-    void Start()
+    private void OnEnable()
     {
-        this.StartCoroutine(this.spawnPlatformCoroutine());
+        this._storyCoroutine = this.spawnPlatformCoroutine();
+        this.StartCoroutine(this._storyCoroutine);
         Platforms.ForEach(plat => _totalWeight += plat.Weight);
+    }
+
+    private void OnDisable()
+    {
+        this.StopCoroutine(this._storyCoroutine);
+        _totalWeight = 0;
     }
 
     private IEnumerator spawnPlatformCoroutine()
@@ -36,7 +45,7 @@ public class EndlessRunnerStoryteller : MonoBehaviour
             EndlessRunnerPlatform selectedPlatform = this.randomPlatform();
 
             yield return new WaitForSeconds(this.NormalTimer +
-                this.CurrentPlatformWidth / EndlessRunnerPlayer.Instance.Speed);
+                this.CurrentPlatformWidth / EndlessRunnerPlayer.Instance.ForwardSpeed);
 
             this.CurrentPlatformWidth = selectedPlatform.RealWidth;
 
