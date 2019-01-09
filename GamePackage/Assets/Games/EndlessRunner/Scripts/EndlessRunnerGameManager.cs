@@ -9,6 +9,7 @@ public class EndlessRunnerGameManager : SingletonBehavior<EndlessRunnerGameManag
     {
         EndlessRunnerPlayer.Instance.enabled = true;
         EndlessRunnerStoryteller.Instance.enabled = true;
+        EndlessRunnerStoryteller.Instance.PlayGame();
     }
 
     public void EndGame()

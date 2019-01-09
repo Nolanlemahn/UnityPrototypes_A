@@ -23,19 +23,25 @@ public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStorytell
     public AnimationCurve AC;
     */
     private float _totalWeight = 0f;
-    private IEnumerator _storyCoroutine = null;
+    private IEnumerator _currentGameplayCoroutine = null;
 
-    private void OnEnable()
+    public void PlayGame(List<PlatformDistribution> platforms = null)
     {
-        this._storyCoroutine = this.spawnPlatformCoroutine();
-        this.StartCoroutine(this._storyCoroutine);
+        if (this._currentGameplayCoroutine != null)
+        {
+            Debug.LogWarning("Game is already playing.");
+            return;
+        }
+        if (platforms != null) this.Platforms = platforms;
         Platforms.ForEach(plat => _totalWeight += plat.Weight);
+        this._currentGameplayCoroutine = this.spawnPlatformCoroutine();
+        this.StartCoroutine(this._currentGameplayCoroutine);
     }
 
     private void OnDisable()
     {
-        this.StopCoroutine(this._storyCoroutine);
-        _totalWeight = 0;
+        this._totalWeight = 0f;
+        this.StopCoroutine(this._currentGameplayCoroutine);
     }
 
     private IEnumerator spawnPlatformCoroutine()
