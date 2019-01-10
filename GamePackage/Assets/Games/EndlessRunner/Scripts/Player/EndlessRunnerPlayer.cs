@@ -95,6 +95,13 @@ public class EndlessRunnerPlayer : SingletonBehavior<EndlessRunnerPlayer>
     }
     #endregion
 
+    #region Commands
+    public void Restart()
+    {
+        this.transform.position = this._initialPosition;
+    }
+    #endregion
+
     #region Helpers
     private void tryMove(InputAction.CallbackContext input)
     {

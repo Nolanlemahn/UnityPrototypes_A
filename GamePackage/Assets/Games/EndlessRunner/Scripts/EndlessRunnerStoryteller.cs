@@ -24,7 +24,9 @@ public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStorytell
     */
     private float _totalWeight = 0f;
     private IEnumerator _currentGameplayCoroutine = null;
+    private List<EndlessRunnerPlatform> _spawnedPlatforms = new List<EndlessRunnerPlatform>();
 
+    #region Lifecycle
     public void PlayGame(List<PlatformDistribution> platforms = null)
     {
         if (this._currentGameplayCoroutine != null)
@@ -38,10 +40,20 @@ public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStorytell
         this.StartCoroutine(this._currentGameplayCoroutine);
     }
 
+    public void Restart()
+    {
+        foreach(EndlessRunnerPlatform erp in this._spawnedPlatforms)
+        {
+            Destroy(erp.gameObject);
+        }
+        this._spawnedPlatforms.Clear();
+    }
+
     private void OnDisable()
     {
         this._totalWeight = 0f;
         this.StopCoroutine(this._currentGameplayCoroutine);
+        this._currentGameplayCoroutine = null;
     }
 
     private IEnumerator spawnPlatformCoroutine()
@@ -58,7 +70,16 @@ public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStorytell
             this.spawnPlatform(selectedPlatform);
         }
     }
+    #endregion
 
+    #region Commands
+    public void ExpirePlatform(EndlessRunnerPlatform platform)
+    {
+        this._spawnedPlatforms.Remove(platform);
+    }
+    #endregion
+
+    #region Helpers
     private EndlessRunnerPlatform randomPlatform()
     {
         float roll = Random.Range(0f, _totalWeight);
@@ -79,6 +100,9 @@ public class EndlessRunnerStoryteller : SingletonBehavior<EndlessRunnerStorytell
         pos.y = 0;
         pos.z += this.DistanceAhead;
 
-        Instantiate(platform.gameObject, pos, Quaternion.identity);
+        GameObject instantiation = Instantiate(platform.gameObject, pos, Quaternion.identity);
+        EndlessRunnerPlatform newPlatform = instantiation.GetComponent<EndlessRunnerPlatform>();
+        this._spawnedPlatforms.Add(newPlatform);
     }
+    #endregion
 }
